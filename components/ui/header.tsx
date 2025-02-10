@@ -15,23 +15,20 @@ export function Header({ title, onSearchPress, onNotificationPress }: HeaderProp
   const insets = useSafeAreaInsets();
 
   return (
-    <View className="bg-background " style={{ paddingTop: insets.top }}>
+    <View className="bg-background" style={{ paddingTop: insets.top }}>
       <View className="flex-row items-center justify-between px-4 py-3">
-        {/* Left space for symmetry */}
-        <View className="w-12" />
+        {/* Left - Search */}
+        <Pressable onPress={onSearchPress}>
+          <Search size={24} color="#64748b" />
+        </Pressable>
 
-        {/* Title */}
-        <Text className="text-lg font-semibold">{title}</Text>
+        {/* Center - Title */}
+        <Text className="text-lg font-semibold absolute left-0 right-0 text-center">{title}</Text>
 
-        {/* Right actions */}
-        <View className="flex-row items-center gap-4">
-          <Pressable onPress={onSearchPress}>
-            <Search size={24} color="#64748b" />
-          </Pressable>
-          <Pressable onPress={onNotificationPress}>
-            <Bell size={24} color="#64748b" />
-          </Pressable>
-        </View>
+        {/* Right - Notifications */}
+        <Pressable onPress={onNotificationPress}>
+          <Bell size={24} color="#64748b" />
+        </Pressable>
       </View>
     </View>
   );
