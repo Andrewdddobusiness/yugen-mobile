@@ -46,7 +46,7 @@ export default function AppLayout() {
               case "create":
                 return "Create";
               case "itineraries":
-                return "My Plans";
+                return "My Itineraries";
               case "profile":
                 return "Profile";
               default:
@@ -96,7 +96,7 @@ export default function AppLayout() {
       <Tabs.Screen
         name="itineraries"
         options={{
-          title: "My Plans",
+          title: "My Itineraries",
           tabBarIcon: ({ color, size }) => <Map size={size} color={color} />,
         }}
       />
