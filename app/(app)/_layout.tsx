@@ -4,6 +4,7 @@ import { Platform, Text } from "react-native";
 import { Redirect } from "expo-router";
 import { useSession } from "~/lib/auth/ctx";
 import { Home, Compass, PlusCircle, Map, User } from "lucide-react-native";
+import { Header } from "~/components/ui/header";
 
 import { HapticTab } from "@/components/HapticTab";
 import TabBarBackground from "@/components/ui/TabBarBackground";
@@ -22,11 +23,42 @@ export default function AppLayout() {
     return <Redirect href="/signIn" />;
   }
 
+  const handleSearch = () => {
+    console.log("Search pressed");
+  };
+
+  const handleNotification = () => {
+    console.log("Notification pressed");
+  };
+
   return (
     <Tabs
       screenOptions={{
+        headerShown: true,
+        header: ({ route }) => {
+          // Get the title based on the route
+          const getTitleForRoute = () => {
+            switch (route.name) {
+              case "index":
+                return "Home";
+              case "explore":
+                return "Explore";
+              case "create":
+                return "Create";
+              case "itineraries":
+                return "My Plans";
+              case "profile":
+                return "Profile";
+              default:
+                return "";
+            }
+          };
+
+          return (
+            <Header title={getTitleForRoute()} onSearchPress={handleSearch} onNotificationPress={handleNotification} />
+          );
+        },
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-        headerShown: false,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
         tabBarShowLabel: false,

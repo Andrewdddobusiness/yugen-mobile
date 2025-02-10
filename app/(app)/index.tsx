@@ -1,74 +1,97 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import React from "react";
+import { ScrollView, RefreshControl, View } from "react-native";
+import { Text } from "~/components/ui/text";
+import { Post } from "~/components/ui/post";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+// Mock data
+const MOCK_POSTS = [
+  {
+    id: "1",
+    username: "traveler_jane",
+    profileImage: "https://images.unsplash.com/photo-1494790108377-be9c29b29330",
+    title: "Amazing Trip to Bali",
+    description: "Spent 2 weeks exploring the beautiful beaches and temples of Bali. Here's my complete itinerary!",
+    imageUrl: "https://images.unsplash.com/photo-1537996194471-e657df975ab4",
+    likes: 124,
+    comments: 23,
+  },
+  {
+    id: "2",
+    username: "wanderlust_mike",
+    profileImage: "https://images.unsplash.com/photo-1503899036084-c55cdd92da26",
+    title: "Tokyo Food Guide",
+    description: "A curated list of must-try restaurants and street food spots in Tokyo. Save this for your next trip!",
+    imageUrl: "https://images.unsplash.com/photo-1503899036084-c55cdd92da26",
+    likes: 89,
+    comments: 15,
+  },
+  {
+    id: "3",
+    username: "adventure_sam",
+    profileImage: "https://ui-avatars.com/api/?name=adventure_sam",
+    title: "Backpacking Europe",
+    description: "My 3-month journey through 10 European countries. Budget tips and highlights included!",
+    imageUrl: "https://images.unsplash.com/photo-1537996194471-e657df975ab4",
+    likes: 256,
+    comments: 45,
+  },
+];
 
 export default function HomeScreen() {
+  const insets = useSafeAreaInsets();
+  const [refreshing, setRefreshing] = React.useState(false);
+  const [posts, setPosts] = React.useState(MOCK_POSTS);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    // Simulate a refresh
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
+
+  const handleLike = (postId: string) => {
+    setPosts(posts.map((post) => (post.id === postId ? { ...post, likes: post.likes + 1 } : post)));
+  };
+
+  const handleComment = (postId: string, comment: string) => {
+    setPosts(posts.map((post) => (post.id === postId ? { ...post, comments: post.comments + 1 } : post)));
+    // Here you would typically send the comment to your backend
+    console.log(`New comment on post ${postId}:`, comment);
+  };
+
+  const handleShare = (postId: string) => {
+    // Implement share functionality
+    console.log(`Sharing post ${postId}`);
+  };
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <ScrollView
+      className="flex-1 bg-zinc-100"
+      contentContainerStyle={{
+        paddingBottom: insets.bottom + 80,
+      }}
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+    >
+      <View className="pt-2">
+        {posts.map((post) => (
+          <View key={post.id} className="mt-4">
+            <Post
+              username={post.username}
+              profileImage={post.profileImage}
+              title={post.title}
+              description={post.description}
+              imageUrl={post.imageUrl}
+              likes={post.likes}
+              comments={post.comments}
+              onLike={() => handleLike(post.id)}
+              onComment={(text) => handleComment(post.id, text)}
+              onShare={() => handleShare(post.id)}
+            />
+          </View>
+        ))}
+      </View>
+    </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
