@@ -3,7 +3,7 @@ import React from "react";
 import { Platform, Text } from "react-native";
 import { Redirect } from "expo-router";
 import { useSession } from "~/lib/auth/ctx";
-import { Ionicons } from "@expo/vector-icons";
+import { Home, Compass, PlusCircle, Map, User } from "lucide-react-native";
 
 import { HapticTab } from "@/components/HapticTab";
 import TabBarBackground from "@/components/ui/TabBarBackground";
@@ -29,6 +29,7 @@ export default function AppLayout() {
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
+        tabBarShowLabel: false,
         tabBarStyle: Platform.select({
           ios: {
             // Use a transparent background on iOS to show the blur effect
@@ -42,14 +43,14 @@ export default function AppLayout() {
         name="index"
         options={{
           title: "Feed",
-          tabBarIcon: ({ color, size }) => <Ionicons name="home" size={size} color={color} />,
+          tabBarIcon: ({ color, size }) => <Home size={size} color={color} />,
         }}
       />
       <Tabs.Screen
         name="explore"
         options={{
           title: "Explore",
-          tabBarIcon: ({ color, size }) => <Ionicons name="compass" size={size} color={color} />,
+          tabBarIcon: ({ color, size }) => <Compass size={size} color={color} />,
         }}
       />
       <Tabs.Screen
@@ -57,23 +58,21 @@ export default function AppLayout() {
         options={{
           title: "Create",
           tabBarLabel: () => null,
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="add-circle" size={size + 8} color={color} style={{ marginBottom: -3 }} />
-          ),
+          tabBarIcon: ({ color, size }) => <PlusCircle size={size + 8} color={color} style={{ marginBottom: -3 }} />,
         }}
       />
       <Tabs.Screen
         name="itineraries"
         options={{
           title: "My Plans",
-          tabBarIcon: ({ color, size }) => <Ionicons name="map" size={size} color={color} />,
+          tabBarIcon: ({ color, size }) => <Map size={size} color={color} />,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           title: "Profile",
-          tabBarIcon: ({ color, size }) => <Ionicons name="person" size={size} color={color} />,
+          tabBarIcon: ({ color, size }) => <User size={size} color={color} />,
         }}
       />
     </Tabs>
