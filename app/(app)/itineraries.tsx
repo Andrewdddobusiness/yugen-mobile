@@ -58,7 +58,7 @@ export default function ItinerariesScreen() {
         paddingBottom: insets.bottom + 80,
       }}
     >
-      <View className="p-4 gap-y-2">
+      <View className="p-2 gap-y-2">
         {MOCK_MY_ITINERARIES.map((itinerary) => (
           <ItineraryCard
             key={itinerary.id}
