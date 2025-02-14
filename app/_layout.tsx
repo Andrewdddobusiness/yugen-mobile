@@ -4,10 +4,11 @@ import { Theme, ThemeProvider, DefaultTheme, DarkTheme } from "@react-navigation
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import * as React from "react";
-import { Platform } from "react-native";
+import { Platform, View, ActivityIndicator } from "react-native";
 import { NAV_THEME } from "../lib/constants";
 import { useColorScheme } from "~/lib/useColorScheme";
 import { SessionProvider, useSession } from "~/lib/auth/ctx";
+import { Text } from "~/components/ui/text";
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -23,10 +24,43 @@ export {
   ErrorBoundary,
 } from "expo-router";
 
-export default function RootLayout() {
+function LoadingScreen() {
+  return (
+    <View className="flex-1 items-center justify-center bg-background">
+      <ActivityIndicator size="large" />
+      <Text className="mt-4 text-muted-foreground">Loading...</Text>
+    </View>
+  );
+}
+
+function RootLayoutNav() {
   const { session, isLoading } = useSession();
+  const { isDarkColorScheme } = useColorScheme();
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
+
+  return (
+    <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
+      <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
+      <Stack screenOptions={{ headerShown: false }}>
+        {!session ? (
+          <>
+            <Stack.Screen name="signIn" />
+            <Stack.Screen name="signUp" />
+          </>
+        ) : (
+          <Stack.Screen name="(app)" />
+        )}
+      </Stack>
+    </ThemeProvider>
+  );
+}
+
+export default function RootLayout() {
   const hasMounted = React.useRef(false);
-  const { colorScheme, isDarkColorScheme } = useColorScheme();
+  const { colorScheme } = useColorScheme();
   const [isColorSchemeLoaded, setIsColorSchemeLoaded] = React.useState(false);
 
   useIsomorphicLayoutEffect(() => {
@@ -42,29 +76,13 @@ export default function RootLayout() {
     hasMounted.current = true;
   }, []);
 
-  if (!isColorSchemeLoaded || isLoading) {
-    return null;
+  if (!isColorSchemeLoaded) {
+    return <LoadingScreen />;
   }
 
   return (
     <SessionProvider>
-      <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-        <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
-        <Stack
-          screenOptions={{
-            headerShown: false,
-          }}
-        >
-          {!session ? (
-            <>
-              <Stack.Screen name="signIn" />
-              <Stack.Screen name="signUp" />
-            </>
-          ) : (
-            <Stack.Screen name="(app)" />
-          )}
-        </Stack>
-      </ThemeProvider>
+      <RootLayoutNav />
     </SessionProvider>
   );
 }
