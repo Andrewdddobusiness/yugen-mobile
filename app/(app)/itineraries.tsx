@@ -44,6 +44,7 @@ export default function ItinerariesScreen() {
       <View className="p-2 gap-y-2">
         {itineraries.map((itinerary) => (
           <ItineraryCard
+            itinerary_id={itinerary.itinerary_id.toString()}
             key={itinerary.itinerary_id}
             title={itinerary.title || "Untitled Itinerary"}
             imageUrl={itinerary.imageUrl || "https://placekitten.com/200/200"}

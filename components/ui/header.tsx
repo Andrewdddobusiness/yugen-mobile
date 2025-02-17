@@ -1,9 +1,10 @@
 import React from "react";
-import { View } from "react-native";
+import { View, ActivityIndicator } from "react-native";
 import { Text } from "./text";
 import { Search, Bell } from "lucide-react-native";
 import { Pressable } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Skeleton } from "./skeleton";
 
 interface HeaderProps {
   title: string;
@@ -23,7 +24,9 @@ export function Header({ title, onSearchPress, onNotificationPress }: HeaderProp
         </Pressable>
 
         {/* Center - Title */}
-        <Text className="text-lg font-semibold absolute left-0 right-0 text-center">{title}</Text>
+        <View className="absolute left-0 right-0 flex-row justify-center">
+          <Text className="text-lg font-semibold">{title}</Text>
+        </View>
 
         {/* Right - Notifications */}
         <Pressable onPress={onNotificationPress}>

@@ -33,11 +33,10 @@ export async function getUserItineraries(userId: string): Promise<Itinerary[]> {
       // Get the first destination's city image
       const firstDestination = destinations[0];
       let imageUrl = null;
-      console.log("firstDestination", firstDestination);
+
       if (firstDestination) {
         imageUrl = await getCityImage(firstDestination.country, firstDestination.city);
       }
-      console.log("imageUrl", imageUrl);
 
       return {
         itinerary_id: itinerary.itinerary_id,

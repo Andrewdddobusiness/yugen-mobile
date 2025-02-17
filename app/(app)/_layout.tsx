@@ -5,6 +5,7 @@ import { Redirect } from "expo-router";
 import { useSession } from "~/lib/auth/ctx";
 import { Home, Compass, PlusCircle, Map, User } from "lucide-react-native";
 import { Header } from "~/components/ui/header";
+import { useHeaderTitleStore } from "@/stores/headerTitleStore";
 
 import { HapticTab } from "@/components/HapticTab";
 import TabBarBackground from "@/components/ui/TabBarBackground";
@@ -14,6 +15,7 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 export default function AppLayout() {
   const { session, isLoading } = useSession();
   const colorScheme = useColorScheme();
+  const title = useHeaderTitleStore((state: any) => state.title);
 
   if (isLoading) {
     return <Text>Loading...</Text>;
@@ -36,8 +38,11 @@ export default function AppLayout() {
       screenOptions={{
         headerShown: true,
         header: ({ route }) => {
-          // Get the title based on the route
           const getTitleForRoute = () => {
+            if (route.name.startsWith("itinerary")) {
+              return title || "";
+            }
+
             switch (route.name) {
               case "index":
                 return "Home";
@@ -64,7 +69,6 @@ export default function AppLayout() {
         tabBarShowLabel: false,
         tabBarStyle: Platform.select({
           ios: {
-            // Use a transparent background on iOS to show the blur effect
             position: "absolute",
           },
           default: {},
@@ -105,6 +109,12 @@ export default function AppLayout() {
         options={{
           title: "Profile",
           tabBarIcon: ({ color, size }) => <User size={size} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="itinerary"
+        options={{
+          href: null,
         }}
       />
     </Tabs>

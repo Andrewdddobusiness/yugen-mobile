@@ -4,6 +4,7 @@ import { Text } from "./text";
 import { MoreHorizontal } from "lucide-react-native";
 import { formatDateRange } from "~/lib/utils/formatDate";
 import { Skeleton } from "./skeleton";
+import { router } from "expo-router";
 
 interface ItineraryCardProps {
   title: string;
@@ -14,6 +15,7 @@ interface ItineraryCardProps {
   endDate: string;
   onPress?: () => void;
   onOptionsPress?: () => void;
+  itinerary_id: string;
 }
 
 export function ItineraryCard({
@@ -25,12 +27,21 @@ export function ItineraryCard({
   endDate,
   onPress,
   onOptionsPress,
+  itinerary_id,
 }: ItineraryCardProps) {
   const dateRange = formatDateRange(startDate, endDate);
   const [isImageLoading, setIsImageLoading] = React.useState(true);
 
+  const handlePress = () => {
+    console.log("Navigating to itinerary:", `/itinerary/${itinerary_id}`);
+    if (onPress) {
+      onPress();
+    }
+    router.push(`/itinerary/${itinerary_id}`);
+  };
+
   return (
-    <Pressable onPress={onPress}>
+    <Pressable onPress={handlePress}>
       <View className="bg-white p-3 rounded-lg flex-row">
         {/* Image or Skeleton */}
         {imageUrl ? (

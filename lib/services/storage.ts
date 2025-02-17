@@ -17,7 +17,6 @@ export async function getCityImage(country: string, city: string): Promise<strin
       try {
         const response = await fetch(publicUrl, { method: "HEAD" });
         if (response.ok) {
-          console.log("response", response);
           return publicUrl;
         }
       } catch (e) {
