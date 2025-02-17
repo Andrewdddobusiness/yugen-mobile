@@ -44,11 +44,10 @@ export function ItineraryCard({
     <Pressable onPress={handlePress}>
       <View className="bg-white p-3 rounded-lg flex-row">
         {/* Image or Skeleton */}
-        {imageUrl ? (
+        {imageUrl || isImageLoading ? (
           <>
-            {isImageLoading && <Skeleton className="absolute w-24 h-24 rounded-lg" />}
             <Image
-              source={{ uri: imageUrl }}
+              source={imageUrl ? { uri: imageUrl } : undefined}
               className="w-24 h-24 rounded-lg"
               resizeMode="cover"
               onLoadStart={() => setIsImageLoading(true)}
